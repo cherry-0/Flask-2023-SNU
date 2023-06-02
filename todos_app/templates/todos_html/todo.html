@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h1>Principles of Web App</h1>
+<p>Todo detail (HTML)</p>
+{% endblock %}
+
+{% block main %}
+<dl>
+    <dt>No.</dt>
+    <dd>{{todo.pk}}</dd>
+    <dt>Title</dt>
+    <dd>{{todo.title}}</dd>
+    <dt>Completed</dt>
+    <dd>{{todo.completed}}</dd>
+    <dt>Updated at</dt>
+    <dd>{{todo.updated_at}}</dd>
+</dl>
+<form method="POST" action="{{url_for('todos_html.toggle_todo', pk=todo.pk)}}">
+    <button type="submit">Toggle</button>
+</form>
+<form method="POST" action="{{url_for('todos_html.delete_todo', pk=todo.pk)}}">
+    <button type="submit">Delete</button>
+</form>
+<p>
+    <a href="{{url_for('todos_html.list_todos')}}">Go to list</a>
+</p>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h1>Principles of Web App</h1>
+<p>Todo list demo (HTML + JavaScript)</p>
+{% endblock %}
+
+{% block main %}
+<form class="form">
+    <input class="title-input" />
+    <button type="submit">Create</button>
+</form>
+
+<table>
+    <thead>
+        <th>No.</th>
+        <th>Title</th>
+        <th>Completed</th>
+        <th>Updated at</th>
+        <th>Actions</th>
+    </thead>
+    <tbody class="table-body">
+    </tbody>
+</table>
+
+<p>
+    <a href="{{url_for('index')}}">Go to home</a>
+</p>
+
+<template id="todo-template">
+    <tr class="todo" data-pk="">
+        <td class="todo__pk"></td>
+        <td class="todo__title"></td>
+        <td>
+            <input type="checkbox" class="todo__completed" />
+        </td>
+        <td class="todo__updated-at"></td>
+        <td class="todo__actions">
+            <button class="todo__delete">Delete</button>
+        </td>
+    </tr>
+</template>
+
+<script>
+const form = document.querySelector('.form')
+const titleInput = document.querySelector('.title-input')
+const tableBody = document.querySelector('.table-body')
+const todoItemTemplate = document.querySelector('#todo-template')
+
+/// 페이지가 로드되었을 때 실행되는 함수
+function setup() {
+    // 할 일 목록을 서버에서 불러와 표시합니다.
+    listTodo()
+
+    // 폼 전송 이벤트 핸들러를 등록합니다.
+    form.addEventListener('submit', e => {
+        e.preventDefault()
+        const title = titleInput.value
+        createTodo(title)
+        form.reset()
+    })
+}
+
+/// 할 일 항목 UI를 목록 끝에 추가하는 함수
+function appendTodoItem(todo) {
+    const fragment = todoItemTemplate.content.cloneNode(true)
+    fragment.querySelector('.todo').dataset.pk = todo.pk
+    fragment.querySelector('.todo__pk').textContent = todo.pk
+    fragment.querySelector('.todo__title').textContent = todo.title
+    fragment.querySelector('.todo__completed').checked = todo.completed
+    fragment.querySelector('.todo__completed').addEventListener('change', e => {
+        // 낙관적 UI 갱신: UI를 먼저 조작하고, 자료 원본을 조작한다. 실패했을 때는?
+        toggleTodo(todo.pk)
+    })
+    fragment.querySelector('.todo__updated-at').textContent = todo.updated_at
+    fragment.querySelector('.todo__delete').addEventListener('click', e => {
+        e.preventDefault()
+        deleteTodo(todo.pk)
+        // 비관적 UI 업데이트: 자료 원본을 조작하고, 성공하면 UI에 반영한다.
+    })
+    tableBody.appendChild(fragment)
+}
+
+/// 할 일 목록을 서버에서 불러와 표시하는 함수
+async function listTodo() {
+    // tbody 태그의 모든 자식을 지웁니다.
+    tableBody.replaceChildren()
+
+    // 서버에서 할 일 목록 데이터를 불러옵니다.
+    const res = await fetch("/todos_js/api/todos")
+    const json = await res.json()
+
+    // 모든 항목을 UI에 표시합니다.
+    for (const todo of json) {
+        appendTodoItem(todo)
+    }
+}
+
+/// 서버에 새 할 일 항목 생성을 요청하는 함수
+async function createTodo(title) {
+    const res = await fetch("/todos_js/api/todos", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({title: title})
+    })
+    const json = await res.json()
+    appendTodoItem(json)
+}
+
+/// 서버에 할 일 항목 삭제를 요청하는 함수
+async function deleteTodo(pk) {
+    const res = await fetch(`/todos_js/api/todos/${pk}`, {
+        method: 'DELETE',
+    })
+    const found = tableBody.querySelector(`tr[data-pk="${pk}"]`)
+    found.remove()
+}
+
+/// 서버에 할 일 항목 완료 여부 변경을 요청하는 함수
+async function toggleTodo(pk) {
+    const res = await fetch(`/todos_js/api/todos/${pk}/toggle`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+    })
+}
+
+setup()
+</script>
+{% endblock %}

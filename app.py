@@ -1,7 +1,5 @@
-from flask import Flask, render_template
+"""
+Flask app file
+"""
 
-app = Flask(__name__)
-
-@app.route("/")
-def hello_world():
-    return render_template("index.html", title="Hello")
+from todos_app import app

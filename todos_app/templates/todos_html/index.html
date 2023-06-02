@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h1>Principles of Web App</h1>
+<p>Todo list (HTML)</p>
+{% endblock %}
+
+{% block main %}
+<form method="POST" action="{{url_for('todos_html.create_todo')}}">
+    <input name="title" />
+    <button type="submit">Create</button>
+</form>
+{% for todo in todos %}
+    <ul>
+        <li>
+            <a href="{{url_for('todos_html.show_todo', pk=todo.pk)}}">
+                [{{todo.pk}}] {{todo.title}} {% if todo.completed %}(Completed){% endif %}
+            </a>
+        </li>
+    </ul>
+{% endfor %}
+<p>
+    <a href="{{url_for('index')}}">Go to home</a>
+</p>
+{% endblock %}

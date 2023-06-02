@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h1>Principles of Web App</h1>
+{% endblock %}
+
+{% block main %}
+<ul>
+    <li><a href="{{url_for('todos_html.list_todos')}}">Todo list (HTML)</a></li>
+    <li><a href="{{url_for('todos_js.index')}}">Todo list (HTML + JavaScript)</a></li>
+</ul>
+{% endblock %}
