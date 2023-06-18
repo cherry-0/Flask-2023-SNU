@@ -65,6 +65,18 @@ class TodoRepository:
             WHERE pk = ?;
         """, [pk])
 
+    def update_todo_title(self, pk: int, title: str):
+        """
+        todos 레코드의 title을 수정
+        """
+        self.db.execute("""
+            UPDATE todos
+            SET
+                updated_at = CURRENT_TIMESTAMP,
+                title = ?
+            WHERE pk = ?;
+        """, [title, pk])
+
     def delete_todo(self, pk: int):
         """
         todos 레코드를 삭제하기

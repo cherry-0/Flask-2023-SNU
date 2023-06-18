@@ -10,7 +10,12 @@
     <dt>No.</dt>
     <dd>{{todo.pk}}</dd>
     <dt>Title</dt>
-    <dd>{{todo.title}}</dd>
+    <dd>
+        <form method="POST" action="{{url_for('todos_html.update_todo_title', pk=todo.pk)}}">
+            <input name="title" value="{{todo.title}}" />
+            <button>Update title</button>
+        </form>
+    </dd>
     <dt>Completed</dt>
     <dd>{{todo.completed}}</dd>
     <dt>Updated at</dt>

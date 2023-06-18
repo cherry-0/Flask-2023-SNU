@@ -47,3 +47,12 @@ def toggle_todo(pk):
     repo = TodoRepository(get_db())
     repo.toggle_todo(pk)
     return redirect(url_for('todos_html.show_todo', pk=pk))
+
+
+@blueprint.post('/<pk>/update_title')
+def update_todo_title(pk):
+    new_title = request.form['title']
+
+    repo = TodoRepository(get_db())
+    repo.update_todo_title(pk, new_title)
+    return redirect(url_for('todos_html.show_todo', pk=pk))
