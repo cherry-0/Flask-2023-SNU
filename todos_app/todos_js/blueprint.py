@@ -53,3 +53,11 @@ def toggle_todo(pk):
     repo = TodoRepository(get_db())
     repo.toggle_todo(pk)
     return {'ok': True}
+
+
+@blueprint.patch('/api/todos/<pk>')
+def update_todo_title(pk):
+    repo = TodoRepository(get_db())
+    new_title = request.json['title'] or 'No title'
+    repo.update_todo_title(pk, new_title)
+    return {'ok': True}

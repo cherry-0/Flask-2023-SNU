@@ -67,6 +67,11 @@ function appendTodoItem(todo) {
     fragment.querySelector('.todo').dataset.pk = todo.pk
     fragment.querySelector('.todo__pk').textContent = todo.pk
     fragment.querySelector('.todo__title').textContent = todo.title
+    fragment.querySelector('.todo__title').addEventListener('click', e => {
+        const newTitle = prompt('Enter a new title')
+        updateTodoTitle(todo.pk, newTitle)
+        e.target.textContent = newTitle
+    })
     fragment.querySelector('.todo__completed').checked = todo.completed
     fragment.querySelector('.todo__completed').addEventListener('change', e => {
         // 낙관적 UI 갱신: UI를 먼저 조작하고, 자료 원본을 조작한다. 실패했을 때는?
@@ -127,6 +132,18 @@ async function toggleTodo(pk) {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
+    })
+}
+
+/// 서버에 할 일 항목 제목 변경을 요청하는 함수
+async function updateTodoTitle(pk, title) {
+    const res = await fetch(`/todos_js/api/todos/${pk}`, {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({title})
     })
 }
 
