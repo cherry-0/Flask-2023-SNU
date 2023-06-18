@@ -38,3 +38,22 @@ flask --debug run
 
 - [GitHub Codespaces Flask template](https://github.com/github/codespaces-flask)
 - [Flask 공식 문서](https://flask.palletsprojects.com/en/2.3.x/patterns/javascript/)
+
+# 두 가지 제작 방식의 특성 비교
+
+## 서버 측 템플릿 언어와 HTML을 사용해서 문서를 만드는 방식
+
+- 템플릿: HTML 중간중간에 Python 값을 넣어서 HTML 문서를 완성키기는 기능
+- 템플릿으로 문서를 생성하는 Python 코드는 Python 서버에서 실행된다.
+- 매 요청마다 웹 서버가 문서를 새로 생성해서 보여준다.
+- 매 요청마다 문서를 새로 생성하기 때문에, 구현이 단순하다.
+- 상호작용을 할 때마다 웹 브라우저 상에서 페이지 새로고침을 필요로 하기 때문에, 응답성이 나쁘다.
+
+
+## JavaScript 를 활용해서 문서를 조작하는 방식
+
+- 웹 브라우저에서 실행되는 JavaScript 를 통해 문서를 생성 및 조작하는 방식
+- JavaScript 측에서 서버에 요청을 보내, 필요한 데이터를 받는다.
+- 이후 DOM API를 통해 해당 데이터로부터 문서를 생성하거나 조작해서 내용을 표시한다.
+- 상호작용을 할 때마다 페이지 새로고침을 할 필요가 없어서, 응답성이 좋다.
+- 필요한 데이터를 받아와서, 필요한 부분만 DOM API를 통해서 조작해야 하기 때문에, 구현이 복잡하다.
